@@ -1,25 +1,26 @@
+import 'babel-polyfill'
 import express from 'express'
-import React from 'react'
-import {renderToString} from 'react-dom/server'
-import Home from './client/components/Home'
+import {matchRoutes} from 'react-router-config'
+import Routes from './client/Routes'
+import createStore from './helpers/createStore'
+import renderer from './helpers/renderer'
 
 const app = express()
 
 app.use(express.static('public'))
 
-app.get('/', (req, res) => {
-  const content = renderToString(<Home/>)
-  const html = `
-    <html>
-      <head></head>
-      <body>
-        <div id="root">${content}</div>
-        <script src="bundle.js"></script>
-      </body>
-    </html>
-  `
+app.get('*', async (req, res) => {
+  const store = createStore()
 
-  res.send(html)
+  // Load all necessary component data
+  await Promise.all(
+    matchRoutes(Routes, req.path).map(({route}) => {
+      const {loadData} = route
+      return loadData ? loadData(store) : null
+    })
+  )
+
+  res.send(renderer(req, store))
 })
 
 app.listen(3000, () => {
