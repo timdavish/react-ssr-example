@@ -23,9 +23,7 @@ class UsersList extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  users: state.users,
-})
+const mapStateToProps = ({users}) => ({users})
 
 const loadData = store => {
   return store.dispatch(fetchUsers())
