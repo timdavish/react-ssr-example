@@ -25,13 +25,19 @@ app.get('*', async (req, res) => {
   await Promise.all(
     matchRoutes(Routes, req.path).map(({route}) => {
       const {loadData} = route
-      return loadData ? loadData(store) : null
+
+      return loadData
+        // Wrap each data load promise with an always-resolved promise to avoid
+        // exiting the Promise.all early if a data load fails
+        ? new Promise(resolve => loadData(store).then(resolve).catch(resolve))
+        : null
     })
   )
 
   const context = {}
   const content = renderer(req, store, context)
 
+  if (context.url) return res.redirect(301, context.url)
   if (context.notFound) res.status(404)
 
   res.send(content)

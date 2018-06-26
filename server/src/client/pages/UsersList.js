@@ -4,6 +4,8 @@ import {fetchUsers} from '../actions'
 
 class UsersList extends Component {
   componentDidMount () {
+    console.log(this.props)
+    // TODO: use staticContext to determine if this page was loaded on the server
     this.props.fetchUsers()
   }
 
@@ -16,7 +18,7 @@ class UsersList extends Component {
   render () {
     return (
       <div>
-        Here&apos;s a big list of users:
+        <h3>Here&apos;s a big list of users:</h3>
         <ul>{this.renderUsers()}</ul>
       </div>
     )
@@ -24,12 +26,11 @@ class UsersList extends Component {
 }
 
 const mapStateToProps = ({users}) => ({users})
+const mapDispatchToProps = {fetchUsers}
 
-const loadData = store => {
-  return store.dispatch(fetchUsers())
-}
+const loadData = ({dispatch}) => dispatch(fetchUsers())
 
 export default {
-  component: connect(mapStateToProps, {fetchUsers})(UsersList),
+  component: connect(mapStateToProps, mapDispatchToProps)(UsersList),
   loadData,
 }
