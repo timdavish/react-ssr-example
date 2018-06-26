@@ -2,6 +2,7 @@ import React from 'react'
 import App from './App'
 import Home from './pages/Home'
 import UsersList from './pages/UsersList'
+import NotFound from './pages/NotFound'
 
 const Routes = [
   {
@@ -16,6 +17,10 @@ const Routes = [
         path: '/users',
         exact: true,
         ...UsersList,
+      },
+      {
+        path: '*',
+        ...NotFound,
       },
     ],
   },
