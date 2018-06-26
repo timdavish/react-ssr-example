@@ -1,12 +1,20 @@
 import React, {Component} from 'react'
+import {Helmet} from 'react-helmet'
 import {connect} from 'react-redux'
 import {fetchUsers} from '../actions'
 
 class UsersList extends Component {
   componentDidMount () {
-    console.log(this.props)
-    // TODO: use staticContext to determine if this page was loaded on the server
     this.props.fetchUsers()
+  }
+
+  renderHead () {
+    return (
+      <Helmet>
+        <title>{`${this.props.users.length} Users`}</title>
+        <meta property='og:title' content='Users List'/>
+      </Helmet>
+    )
   }
 
   renderUsers () {
@@ -18,6 +26,8 @@ class UsersList extends Component {
   render () {
     return (
       <div>
+        {this.renderHead()}
+
         <h3>Here&apos;s a big list of users:</h3>
         <ul>{this.renderUsers()}</ul>
       </div>

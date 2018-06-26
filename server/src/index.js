@@ -37,12 +37,10 @@ app.get('*', async (req, res) => {
   const context = {}
   const content = renderer(req, store, context)
 
-  if (context.url) return res.redirect(301, context.url)
-  if (context.notFound) res.status(404)
+  if (context.url) return res.redirect(302, context.url)
+  if (context.status) res.status(context.status)
 
   res.send(content)
 })
 
-app.listen(3000, () => {
-  console.log(`Listening on port ${3000}`)
-})
+app.listen(3000, () => console.log(`Listening on port ${3000}`))

@@ -1,12 +1,28 @@
-import React from 'react'
+import React, {Component} from 'react'
+import {Helmet} from 'react-helmet'
 
-const NotFound = ({staticContext = {}}) => {
-  // staticContext is passed from StaticRouter when this is server rendered
-  staticContext.notFound = true
+class NotFound extends Component {
+  renderHead () {
+    return (
+      <Helmet>
+        <title>React SSR Example - Page Not Found</title>
+        <meta property='og:title' content='React SSR Example - Page Not Found'/>
+      </Helmet>
+    )
+  }
 
-  return (
-    <h1>Oops! Route not found.</h1>
-  )
+  render () {
+    const {staticContext = {}} = this.props
+    staticContext.status = 404
+
+    return (
+      <div>
+        {this.renderHead()}
+
+        <h1>Oops! Route not found.</h1>
+      </div>
+    )
+  }
 }
 
 export default {

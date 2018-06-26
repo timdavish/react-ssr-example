@@ -1,13 +1,21 @@
 import React, {Component} from 'react'
+import {Helmet} from 'react-helmet'
 import {connect} from 'react-redux'
 import {fetchAdmins} from '../actions'
 import requireAuth from '../components/hocs/requireAuth'
 
 class AdminsList extends Component {
   componentDidMount () {
-    console.log(this.props)
-    // TODO: use staticContext to determine if this page was loaded on the server
     this.props.fetchAdmins()
+  }
+
+  renderHead () {
+    return (
+      <Helmet>
+        <title>{`${this.props.admins.length} Users`}</title>
+        <meta property='og:title' content='Admins List'/>
+      </Helmet>
+    )
   }
 
   renderAdmins () {
@@ -19,6 +27,8 @@ class AdminsList extends Component {
   render () {
     return (
       <div>
+        {this.renderHead()}
+
         <h3>Here&apos;s a big (PROTECTED) list of admins:</h3>
         <ul>{this.renderAdmins()}</ul>
       </div>
